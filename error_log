@@ -1,0 +1,12 @@
+[15-Jan-2016 10:47:21 Etc/GMT] PHP Parse error:  syntax error, unexpected end of file in /home/jigardew/public_html/php/sendmail.php on line 20
+[15-Jan-2016 10:59:40 Etc/GMT] PHP Parse error:  syntax error, unexpected 'if' (T_IF) in /home/jigardew/public_html/php/sendmail.php on line 4
+[15-Jan-2016 11:25:42 Etc/GMT] PHP Parse error:  syntax error, unexpected end of file in /home/jigardew/public_html/php/sendmail2.php on line 63
+[15-Jan-2016 11:41:38 Etc/GMT] PHP Parse error:  syntax error, unexpected ''<p>This is is paragraph</p>'' (T_CONSTANT_ENCAPSED_STRING) in /home/jigardew/public_html/php/sendmail2.php on line 28
+[15-Jan-2016 12:58:30 Etc/GMT] PHP Parse error:  syntax error, unexpected '$mail_sent' (T_VARIABLE) in /home/jigardew/public_html/php/sendmail2.php on line 66
+[15-Jan-2016 14:04:09 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/jigardew/public_html/php/sendmail2.php on line 33
+[15-Jan-2016 14:05:36 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/jigardew/public_html/php/sendmail2.php on line 33
+[15-Jan-2016 14:05:38 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/jigardew/public_html/php/sendmail2.php on line 33
+[15-Jan-2016 14:06:05 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/jigardew/public_html/php/sendmail2.php on line 33
+[15-Jan-2016 14:07:36 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/jigardew/public_html/php/sendmail2.php on line 33
+[15-Jan-2016 14:07:37 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/jigardew/public_html/php/sendmail2.php on line 33
+[15-Jan-2016 14:12:38 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/jigardew/public_html/php/sendmail2.php on line 35
