@@ -9,7 +9,11 @@ if (!mysql_select_db(DATABASE)) {
     die('Could not select database: ' . mysql_error());
 }
 print "Connection Success";
+<<<<<<< HEAD
 $result = mysql_query('SELECT * FROM `flipkart_mobiles`');
+=======
+$result = mysql_query('SELECT * FROM `flipkart-mobiles`');
+>>>>>>> e77f95a7b87c806b7cb57015dd3ecc279fa14388
 if (!$result) {
     die('Could not query:' . mysql_error());
 }
@@ -39,7 +43,11 @@ if (mysqli_connect_errno())
 echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 
+<<<<<<< HEAD
 $result = mysqli_query($con,"SELECT * FROM `flipkart_mobiles`");
+=======
+$result = mysqli_query($con,"SELECT * FROM `flipkart-mobiles`");
+>>>>>>> e77f95a7b87c806b7cb57015dd3ecc279fa14388
 
 echo "<table border='1'>
 <tr>
