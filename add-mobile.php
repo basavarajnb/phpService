@@ -16,17 +16,18 @@ $siteName = $_POST["siteName"];
 $sql = NULL;
 /* create a prepared statement */
 if (isset($siteName) && ($siteName == "Flipkart")) {
-    $sql = "INSERT INTO `flipkart_mobiles` (`mobileId`, `mobilePrice`, `mobileLowestPrice`, `mobileName`, `mobileRating`, `mobileReviewCount`, `mobileUrl`, `mobileReviewUrl`, `mobileImageUrl`) VALUES (?,?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO `flipkart_mobiles` (`mobileId`, `mobilePrice`, `mobileLowestPrice`, `mobileName`, `mobileRating`, `mobileReviewCount`, `mobileUrl`, `mobileReviewUrl`, `mobileImageUrl`, `lowestPriceDate`) VALUES (?,?,?,?,?,?,?,?,?,?)";
 }
 else if (isset($siteName) && ($siteName == "Amazon")) {
-    $sql = "INSERT INTO `amazon_mobiles` (`mobileId`, `mobilePrice`, `mobileLowestPrice`, `mobileName`, `mobileRating`, `mobileReviewCount`, `mobileUrl`, `mobileReviewUrl`, `mobileImageUrl`) VALUES (?,?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO `amazon_mobiles` (`mobileId`, `mobilePrice`, `mobileLowestPrice`, `mobileName`, `mobileRating`, `mobileReviewCount`, `mobileUrl`, `mobileReviewUrl`, `mobileImageUrl`, `lowestPriceDate`) VALUES (?,?,?,?,?,?,?,?,?,?)";
 }
 
 $stmt = $mysqli->prepare($sql);
+$dateTimeVal = date("Y-m-d H:i:s");
 
 if ($stmt && isset($sql)) {
     /* bind parameters for markers */
-    $stmt->bind_param('siissssss', $id, $price, $price, $name, $rating, $reviewCount, $url, $reviewUrl, $imageUrl);
+    $stmt->bind_param('siisssssss', $id, $price, $price, $name, $rating, $reviewCount, $url, $reviewUrl, $imageUrl, $dateTimeVal);
     
     /* execute query */
     $stmt->execute();
@@ -57,13 +58,18 @@ if (isset($price)) {
                 /* free result set */
             }
         }
-        $historyInsertSql = "INSERT INTO `".$historyTableName."`(`productId`, `productPrice`, `updatedDate`) VALUES ('".$id."',".$price.",'".date("Y-m-d H:i:s")."')";
+        $historyInsertSql = "INSERT INTO `".$historyTableName."`(`productId`, `productPrice`, `updatedDate`) VALUES ('".$id."',".$price.",'".$dateTimeVal."')";
         if ($result = $mysqli->query($historyInsertSql)) {
             /* free result set */
         }
     }
 }
-echo json_encode (json_decode ("{}"));
+if ($mysqli->error) {
+
+}
+else {
+    echo json_encode (json_decode ("{}"));
+}
 
 /* close connection */
 $mysqli->close();

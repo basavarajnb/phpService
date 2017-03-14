@@ -125,14 +125,15 @@ if (isset($id) && isset($siteName))
                 $lowestValue = get_value($mysqli,"SELECT `mobileLowestPrice` FROM `".$mainTableName."` WHERE `mobileId` = '".$id."' LIMIT 1");
                 $lowestValue = (int)$lowestValue;
                 $price = (int)$price;
+                $dateTimeVal = date("Y-m-d H:i:s");
                 if ($lowestValue == 0 || $lowestValue > $price) {
-                    $lowestValueInsertSql = "UPDATE `".$mainTableName."` SET  `mobileLowestPrice`= ".$price." WHERE `mobileId`= '".$id."'";
+                    $lowestValueInsertSql = "UPDATE `".$mainTableName."` SET  `mobileLowestPrice`= ".$price.", `lowestPriceDate`".$dateTimeVal." WHERE `mobileId`= '".$id."'";
                     if ($result = $mysqli->query($lowestValueInsertSql)) {
                         $rowsEffected =  $result->num_rows;
                         /* free result set */
                     }
                 }
-                $historyInsertSql = "INSERT INTO `".$historyTableName."`(`productId`, `productPrice`, `updatedDate`) VALUES ('".$id."',".$price.",'".date("Y-m-d H:i:s")."')";
+                $historyInsertSql = "INSERT INTO `".$historyTableName."`(`productId`, `productPrice`, `updatedDate`) VALUES ('".$id."',".$price.",'".$dateTimeVal."')";
                 if ($result = $mysqli->query($historyInsertSql)) {
                     /* free result set */
                 }
