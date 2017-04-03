@@ -48,11 +48,11 @@ if (isset($price)) {
     }
     
     if (isset($mainTableName) && isset($historyTableName)) {
-        $lowestValue = get_value($mysqli,"SELECT `mobileLowestPrice` FROM `".$mainTableName."` WHERE `mobileId` = '".$id."' LIMIT 1");
+        $lowestValue = getLowestPrice($mysqli,"SELECT `mobileLowestPrice` FROM `".$mainTableName."` WHERE `mobileId` = '".$id."' LIMIT 1");
         $lowestValue = (int)$lowestValue;
         $price = (int)$price;
         if ($lowestValue == 0 || $lowestValue > $price) {
-            $lowestValueInsertSql = "UPDATE `".$mainTableName."` SET  `mobileLowestPrice`= ".$price." WHERE `mobileId`= '".$id."'";
+            $lowestValueInsertSql = "UPDATE `".$mainTableName."` SET  `mobileLowestPrice`= ".$price.", `lowestPriceDate` = '". $dateTimeVal ."' WHERE `mobileId`= '".$id."'";
             if ($result = $mysqli->query($lowestValueInsertSql)) {
                 $rowsEffected =  $result->num_rows;
                 /* free result set */
@@ -65,7 +65,7 @@ if (isset($price)) {
     }
 }
 if ($mysqli->error) {
-
+    
 }
 else {
     echo json_encode (json_decode ("{}"));
@@ -73,7 +73,7 @@ else {
 
 /* close connection */
 $mysqli->close();
-function get_value($mysqli, $sql) {
+function getLowestPrice($mysqli, $sql) {
     $result = $mysqli->query($sql);
     $rows = array();
     if ($result->num_rows > 0) {

@@ -15,6 +15,15 @@ $siteName = $_POST["siteName"];
 
 if (isset($id) && isset($siteName))
 {
+    $mainTableName = NULL;
+    $historyTableName = NULL;
+    if ($siteName == "Amazon") {
+        $mainTableName = "amazon_mobiles";
+        $historyTableName = "amazon_price_history";
+    } else if ($siteName == "Flipkart") {
+        $mainTableName = "flipkart_mobiles";
+        $historyTableName = "flipkart_price_history";
+    }
     $str= "";
     $sqlStmt = NULL;
     if (isset($price)) {
@@ -82,14 +91,15 @@ if (isset($id) && isset($siteName))
     if ($str != "" ) {
         $str = rtrim($str,', ');
         if ($siteName == "Amazon") {
-            $sqlStmt = "UPDATE `amazon_mobiles` SET ".$str." WHERE `mobileId` = '".$id."'";
+            $sqlStmt = "UPDATE `".$mainTableName."` SET ".$str." WHERE `mobileId` = '".$id."'";
         }
         else if ($siteName == "Flipkart") {
-            $sqlStmt = "UPDATE `flipkart_mobiles` SET ".$str." WHERE `mobileId` = '".$id."'";
+            $sqlStmt = "UPDATE `".$mainTableName."` SET ".$str." WHERE `mobileId` = '".$id."'";
         }
     }
     
     if (isset($sqlStmt)) {
+        $currentRow = getValue($mysqli,"SELECT * FROM `".$mainTableName."` WHERE `mobileId` = '".$id."' LIMIT 1");
         if (!($stmt = $mysqli->prepare($sqlStmt))) {
             $prepareErrorStr =  "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
             exit();
@@ -111,31 +121,24 @@ if (isset($id) && isset($siteName))
         }
         
         if (isset($price)) {
-            $mainTableName = NULL;
-            $historyTableName = NULL;
-            if ($siteName == "Amazon") {
-                $mainTableName = "amazon_mobiles";
-                $historyTableName = "amazon_price_history";
-            } else if ($siteName == "Flipkart") {
-                $mainTableName = "flipkart_mobiles";
-                $historyTableName = "flipkart_price_history";
-            }
-            
             if (isset($mainTableName) && isset($historyTableName)) {
-                $lowestValue = get_value($mysqli,"SELECT `mobileLowestPrice` FROM `".$mainTableName."` WHERE `mobileId` = '".$id."' LIMIT 1");
-                $lowestValue = (int)$lowestValue;
+                $lowestValue = (int)$currentRow['mobileLowestPrice'];
                 $price = (int)$price;
                 $dateTimeVal = date("Y-m-d H:i:s");
                 if ($lowestValue == 0 || $lowestValue > $price) {
-                    $lowestValueInsertSql = "UPDATE `".$mainTableName."` SET  `mobileLowestPrice`= ".$price.", `lowestPriceDate`".$dateTimeVal." WHERE `mobileId`= '".$id."'";
+                    $lowestValueInsertSql = "UPDATE `".$mainTableName."` SET  `mobileLowestPrice`= ".$price.", `lowestPriceDate` = '". $dateTimeVal ."' WHERE `mobileId`= '".$id."'";
                     if ($result = $mysqli->query($lowestValueInsertSql)) {
                         $rowsEffected =  $result->num_rows;
                         /* free result set */
                     }
                 }
-                $historyInsertSql = "INSERT INTO `".$historyTableName."`(`productId`, `productPrice`, `updatedDate`) VALUES ('".$id."',".$price.",'".$dateTimeVal."')";
-                if ($result = $mysqli->query($historyInsertSql)) {
-                    /* free result set */
+                $mobilePriceVal = (int)(int)$currentRow['mobilePrice'];;
+                
+                if ($mobilePriceVal != $price) {
+                    $historyInsertSql = "INSERT INTO `".$historyTableName."`(`productId`, `productPrice`, `updatedDate`) VALUES ('".$id."',".$price.",'".$dateTimeVal."')";
+                    if ($result = $mysqli->query($historyInsertSql)) {
+                        /* free result set */
+                    }
                 }
             }
         }
@@ -145,7 +148,7 @@ echo json_encode (json_decode ("{}"));
 /* close connection */
 $mysqli->close();
 
-function get_value($mysqli, $sql) {
+function getValue($mysqli, $sql) {
     $result = $mysqli->query($sql);
     $rows = array();
     if ($result->num_rows > 0) {
@@ -154,6 +157,6 @@ function get_value($mysqli, $sql) {
             array_push($rows , $row);
         }
     }
-    return is_array($rows) ? $rows[0]['mobileLowestPrice'] : "0";
+    return is_array($rows) ? $rows[0] : "";
 }
 ?>
