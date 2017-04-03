@@ -2,17 +2,36 @@
 require("config/configuration.php");
 require("config/dbcon.php");
 
-$id = $_POST["id"];
-$name = $_POST["name"];
-$price = $_POST["price"];
-$rating = $_POST["rating"];
-$reviewCount = $_POST["reviewCount"];
-$url = $_POST["url"];
-$reviewUrl = $_POST["reviewUrl"];
-$imageUrl = $_POST["imageUrl"];
-$siteName = $_POST["siteName"];
+if (isset($_POST["id"])) {
+    $id = $_POST["id"];
+}
+if (isset($_POST["name"])) {
+    $name = $_POST["name"];
+}
+if (isset($_POST["price"])) {
+    $price = $_POST["price"];
+}
+if (isset($_POST["rating"])) {
+    $rating = $_POST["rating"];
+}
+if (isset($_POST["reviewCount"])) {
+    $reviewCount = $_POST["reviewCount"];
+}
+if (isset($_POST["url"])) {
+    $url = $_POST["url"];
+}
 
+if (isset($_POST["reviewUrl"])) {
+    $reviewUrl = $_POST["reviewUrl"];
+}
 
+if (isset($_POST["imageUrl"])) {
+    $imageUrl = $_POST["imageUrl"];
+}
+
+if (isset($_POST["siteName"])) {
+    $siteName = $_POST["siteName"];
+}
 if (isset($id) && isset($siteName))
 {
     $mainTableName = NULL;
@@ -28,78 +47,78 @@ if (isset($id) && isset($siteName))
     $sqlStmt = NULL;
     if (isset($price)) {
         if ($str == "") {
-            $str = " `mobilePrice` = ? ,";
+            $str = " `productPrice` = ? ,";
         }
         else {
-            $str = $str." `mobilePrice` = ? ,";
+            $str = $str." `productPrice` = ? ,";
         }
     }
     
     if (isset($name)) {
         if ($str == "") {
-            $str = " `mobileName` = '".$name."' , ";
+            $str = " `productName` = '".$name."' , ";
         }
         else {
-            $str = $str." `mobileName` = '".$name."' , ";
+            $str = $str." `productName` = '".$name."' , ";
         }
     }
     
     if (isset($rating)) {
         if ($str == "") {
-            $str = " `mobileRating` = '".$rating."' , ";
+            $str = " `productRating` = '".$rating."' , ";
         }
         else {
-            $str = $str." `mobileRating` = '".$rating."' , ";
+            $str = $str." `productRating` = '".$rating."' , ";
         }
     }
     
     if (isset($reviewCount)) {
         if ($str == "") {
-            $str = " `mobileReviewCount` = '".$reviewCount."' , ";
+            $str = " `productReviewCount` = '".$reviewCount."' , ";
         }
         else {
-            $str = $str." `mobileReviewCount` = '".$reviewCount."' , ";
+            $str = $str." `productReviewCount` = '".$reviewCount."' , ";
         }
     }
     
     if (isset($url)) {
         if ($str == "") {
-            $str = " `mobileUrl` = '".$url."' , ";
+            $str = " `productUrl` = '".$url."' , ";
         }
         else {
-            $str = $str." `mobileUrl` = '".$url."' , ";
+            $str = $str." `productUrl` = '".$url."' , ";
         }
     }
     
     if (isset($reviewUrl)) {
         if ($str == "") {
-            $str = " `mobileReviewUrl` = '".$reviewUrl."' , ";
+            $str = " `productReviewUrl` = '".$reviewUrl."' , ";
         }
         else {
-            $str = $str." `mobileReviewUrl` = '".$reviewUrl."' , ";
+            $str = $str." `productReviewUrl` = '".$reviewUrl."' , ";
         }
     }
     
     if (isset($imageUrl)) {
         if ($str == "") {
-            $str = " `mobileImageUrl` = '".$imageUrl."'";
+            $str = " `productImageUrl` = '".$imageUrl."'";
         }
         else {
-            $str = $str." `mobileImageUrl` = '".$imageUrl."'";
+            $str = $str." `productImageUrl` = '".$imageUrl."'";
         }
     }
     if ($str != "" ) {
         $str = rtrim($str,', ');
         if ($siteName == "Amazon") {
-            $sqlStmt = "UPDATE `".$mainTableName."` SET ".$str." WHERE `mobileId` = '".$id."'";
+            $sqlStmt = "UPDATE `".$mainTableName."` SET ".$str." WHERE `productId` = '".$id."'";
         }
         else if ($siteName == "Flipkart") {
-            $sqlStmt = "UPDATE `".$mainTableName."` SET ".$str." WHERE `mobileId` = '".$id."'";
+            $sqlStmt = "UPDATE `".$mainTableName."` SET ".$str." WHERE `productId` = '".$id."'";
         }
     }
     
     if (isset($sqlStmt)) {
-        $currentRow = getValue($mysqli,"SELECT * FROM `".$mainTableName."` WHERE `mobileId` = '".$id."' LIMIT 1");
+        $currentRow = getValue($mysqli,"SELECT * FROM `".$mainTableName."` WHERE `productId` = '".$id."' LIMIT 1");
         if (!($stmt = $mysqli->prepare($sqlStmt))) {
             $prepareErrorStr =  "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
             exit();
@@ -122,19 +141,19 @@ if (isset($id) && isset($siteName))
         
         if (isset($price)) {
             if (isset($mainTableName) && isset($historyTableName)) {
-                $lowestValue = (int)$currentRow['mobileLowestPrice'];
+                $lowestValue = (int)$currentRow['productLowestPrice'];
                 $price = (int)$price;
                 $dateTimeVal = date("Y-m-d H:i:s");
                 if ($lowestValue == 0 || $lowestValue > $price) {
-                    $lowestValueInsertSql = "UPDATE `".$mainTableName."` SET  `mobileLowestPrice`= ".$price.", `lowestPriceDate` = '". $dateTimeVal ."' WHERE `mobileId`= '".$id."'";
+                    $lowestValueInsertSql = "UPDATE `".$mainTableName."` SET  `productLowestPrice`= ".$price.", `lowestPriceDate` = '". $dateTimeVal ."' WHERE `productId`= '".$id."'";
                     if ($result = $mysqli->query($lowestValueInsertSql)) {
                         $rowsEffected =  $result->num_rows;
                         /* free result set */
                     }
                 }
-                $mobilePriceVal = (int)(int)$currentRow['mobilePrice'];;
+                $productPriceVal = (int)(int)$currentRow['productPrice'];;
                 
-                if ($mobilePriceVal != $price) {
+                if ($productPriceVal != $price) {
                     $historyInsertSql = "INSERT INTO `".$historyTableName."`(`productId`, `productPrice`, `updatedDate`) VALUES ('".$id."',".$price.",'".$dateTimeVal."')";
                     if ($result = $mysqli->query($historyInsertSql)) {
                         /* free result set */

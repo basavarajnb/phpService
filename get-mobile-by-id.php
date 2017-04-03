@@ -7,10 +7,10 @@ $siteName = $_GET["siteName"];
 $id = $_GET["id"];
 $sql = "";
 if (isset($siteName) && ($siteName == "Flipkart")) {
-    $sql = "SELECT * FROM `flipkart_mobiles` where `mobileID` = '".$id."'";
+    $sql = "SELECT * FROM `flipkart_mobiles` where `productID` = '".$id."'";
 }
 else if (isset($siteName) && ($siteName == "Amazon")) {
-    $sql = "SELECT * FROM `amazon_mobiles` where `mobileID` = '".$id."'";
+    $sql = "SELECT * FROM `amazon_mobiles` where `productID` = '".$id."'";
 }
 
 if (isset($sql) && ($sql != "")) {

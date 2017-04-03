@@ -16,10 +16,10 @@ $siteName = $_POST["siteName"];
 $sql = NULL;
 /* create a prepared statement */
 if (isset($siteName) && ($siteName == "Flipkart")) {
-    $sql = "INSERT INTO `flipkart_mobiles` (`mobileId`, `mobilePrice`, `mobileLowestPrice`, `mobileName`, `mobileRating`, `mobileReviewCount`, `mobileUrl`, `mobileReviewUrl`, `mobileImageUrl`, `lowestPriceDate`) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO `flipkart_mobiles` (`productId`, `productPrice`, `productLowestPrice`, `productName`, `productRating`, `productReviewCount`, `productUrl`, `productReviewUrl`, `productImageUrl`, `lowestPriceDate`) VALUES (?,?,?,?,?,?,?,?,?,?)";
 }
 else if (isset($siteName) && ($siteName == "Amazon")) {
-    $sql = "INSERT INTO `amazon_mobiles` (`mobileId`, `mobilePrice`, `mobileLowestPrice`, `mobileName`, `mobileRating`, `mobileReviewCount`, `mobileUrl`, `mobileReviewUrl`, `mobileImageUrl`, `lowestPriceDate`) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO `amazon_mobiles` (`productId`, `productPrice`, `productLowestPrice`, `productName`, `productRating`, `productReviewCount`, `productUrl`, `productReviewUrl`, `productImageUrl`, `lowestPriceDate`) VALUES (?,?,?,?,?,?,?,?,?,?)";
 }
 
 $stmt = $mysqli->prepare($sql);
@@ -48,11 +48,11 @@ if (isset($price)) {
     }
     
     if (isset($mainTableName) && isset($historyTableName)) {
-        $lowestValue = getLowestPrice($mysqli,"SELECT `mobileLowestPrice` FROM `".$mainTableName."` WHERE `mobileId` = '".$id."' LIMIT 1");
+        $lowestValue = getLowestPrice($mysqli,"SELECT `productLowestPrice` FROM `".$mainTableName."` WHERE `productId` = '".$id."' LIMIT 1");
         $lowestValue = (int)$lowestValue;
         $price = (int)$price;
         if ($lowestValue == 0 || $lowestValue > $price) {
-            $lowestValueInsertSql = "UPDATE `".$mainTableName."` SET  `mobileLowestPrice`= ".$price.", `lowestPriceDate` = '". $dateTimeVal ."' WHERE `mobileId`= '".$id."'";
+            $lowestValueInsertSql = "UPDATE `".$mainTableName."` SET  `productLowestPrice`= ".$price.", `lowestPriceDate` = '". $dateTimeVal ."' WHERE `productId`= '".$id."'";
             if ($result = $mysqli->query($lowestValueInsertSql)) {
                 $rowsEffected =  $result->num_rows;
                 /* free result set */
@@ -82,6 +82,6 @@ function getLowestPrice($mysqli, $sql) {
             array_push($rows , $row);
         }
     }
-    return is_array($rows) ? $rows[0]['mobileLowestPrice'] : "0";
+    return is_array($rows) ? $rows[0]['productLowestPrice'] : "0";
 }
 ?>
