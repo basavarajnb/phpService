@@ -2,34 +2,29 @@
 require("config/configuration.php");
 require("config/dbcon.php");
 
+$db = new Db();
 
-$siteName = $_GET["siteName"];
-$id = $_GET["id"];
-$sql = "";
-if (isset($siteName) && ($siteName == "Flipkart")) {
-    $sql = "SELECT * FROM `flipkart_mobiles` where `productID` = '".$id."'";
+$siteName = $db -> quote($_GET["siteName"]);
+$id = $db -> quote($_GET["id"]);
+
+$sql = NULL;
+if (isset($siteName) && ($siteName == "'Flipkart'")) {
+    $sql = "SELECT * FROM `flipkart_mobiles` where `productID` = ".$id;
 }
-else if (isset($siteName) && ($siteName == "Amazon")) {
-    $sql = "SELECT * FROM `amazon_mobiles` where `productID` = '".$id."'";
+else if (isset($siteName) && ($siteName == "'Amazon'")) {
+    $sql = "SELECT * FROM `amazon_mobiles` where `productID` = ".$id;
 }
 
-if (isset($sql) && ($sql != "")) {
-    $result = $mysqli->query($sql);
-    $rows = array();
-    if ($result->num_rows > 0) {
-        // output data of each row
-        while($row = $result->fetch_assoc()) {
-            array_push($rows , $row);
-        }
-    }
-
-    if (isset($rows[0])) {
-        $output = json_encode($rows[0]);
+if (isset($sql)) {
+    $rows = $db -> select($sql);
+    if ($rows == false) {
+        $output = json_encode (json_decode ("{}"));
     }
     else {
-        $output = json_encode (json_decode ("{}"));
-    }    
+        if (isset($rows[0])) {
+            $output = json_encode($rows[0]);
+        }  
+    }
     echo $output;
 }
-$mysqli->close();
 ?>
